@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true"> 
+            <shape> 
+                <gradient android:angle="270" android:endColor="@color/ic_coure_jiu" 
+                    android:startColor="@color/ic_coure_jiu" /> 
+                <size android:height="60dp" android:width="320dp" /> 
+              <corners android:radius="2dp" /> 
+            </shape> 
+        </item> 
+        <item android:state_pressed="true"> 
+            <shape> 
+                <gradient android:angle="270" android:endColor="@color/ic_coure_jiu" 
+                    android:startColor="@color/ic_coure_jiu"/> 
+                <size android:height="60dp" android:width="320dp" /> 
+                 <corners android:radius="2dp" /> 
+            </shape> 
+        </item> 
+        <item> 
+            <shape> 
+                <gradient android:angle="270" android:endColor="@color/ic_coure_jiu_pr" 
+                    android:startColor="@color/ic_coure_jiu_pr"/> 
+                <size android:height="60dp" android:width="320dp" /> 
+                 <corners android:radius="2dp" /> 
+            </shape> 
+        </item> 
+
+</selector>

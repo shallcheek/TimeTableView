@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="view_line">#ffe6e6e6</color>
+    <color name="text_color">#333</color>
+    <!-- For suggestions -->
+    <color name="ic_coure_yi">#8AD297</color>
+    <color name="ic_coure_yi_pr">#5ABF6C</color>
+    <color name="ic_coure_er">#F9A883</color>
+    <color name="ic_coure_er_pr">#F79060</color>
+    <color name="ic_coure_san">#88CFCC</color>
+    <color name="ic_coure_san_pr">#63C0BD</color>
+    <color name="ic_coure_si">#F19C99</color>
+    <color name="ic_coure_si_pr">#ED837F</color>
+    <color name="ic_coure_wu">#F7C56B</color>
+    <color name="ic_coure_wu_pr">#F5B94E</color>
+    <color name="ic_coure_liu">#D2A596</color>
+    <color name="ic_coure_liu_pr">#CA9483</color>
+    <color name="ic_coure_qi">#67BDDE</color>
+    <color name="ic_coure_qi_pr">#31A6D3</color>
+    <color name="ic_coure_ba">#9CCF5A</color>
+    <color name="ic_coure_ba_pr">#8BC73D</color>
+    <color name="ic_coure_jiu">#9AB4CF</color>
+    <color name="ic_coure_jiu_pr">#87A6C6</color>
+    <color name="ic_coure_yisi">#9AB4CF</color>
+    <color name="ic_coure_yisi_pr">#87A6C6</color>
+    <color name="ic_coure_yier">#E593AD</color>
+    <color name="ic_coure_yier_pr">#6DB69C</color>
+    <color name="ic_coure_yisan">#E593AD</color>
+    <color name="ic_coure_yisan_pr">#DF7999</color>
+    <color name="ic_coure_yis">#E2C38A</color>
+    <color name="ic_coure_yis_pr">#D6A858</color>
+    <color name="ic_coure_yiwu">#B29FD2</color>
+    <color name="ic_coure_yiwu_pr">#997FC3</color>
+    <color name="ic_coure_yiliu">#E2C490</color>
+    <color name="ic_coure_yiliu_pr">#DDB97B</color>
+    <color name="ic_coure_wuw">#7B7B7B</color>
+    <color name="ic_coure_wuw_pr">#ADADAD</color>
+    <color name="tab_indicator_text_selected">#2DACA1</color>
+    <color name="tab_indicator_text_unselected">#000000</color>
+
+</resources>
