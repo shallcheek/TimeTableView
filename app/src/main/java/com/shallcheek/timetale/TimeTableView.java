@@ -208,7 +208,7 @@ public class TimeTableView extends LinearLayout {
     }
 
     /**
-     * 星期一到星期五的课表
+     * 星期一到星期天的课表
      *
      * @param model
      * @param week

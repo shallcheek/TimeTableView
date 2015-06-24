@@ -51,9 +51,5 @@ public class MainActivity extends Activity {
                 "老师6", "10", "2-13"));
         mList.add(new TimeTableModel(0, 6, 8, 5, "8:20", "10:10", "证券投资分析",
                 "老师7", "11", "2-13"));
-        mList.add(new TimeTableModel(0, 8, 13, 5, "8:20", "10:10", "证券投资分析",
-                "老师7", "11", "2-13"));
-        mList.add(new TimeTableModel(0, 0, 12, 6, "8:20", "10:10", "证券投资分析",
-                "老师7", "11", "2-13"));
     }
 }
