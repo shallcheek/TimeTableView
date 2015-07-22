@@ -8,10 +8,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 public class MainActivity extends Activity {
     private TimeTableView mTimaTableView;
@@ -26,6 +30,12 @@ public class MainActivity extends Activity {
         addList();
         mTimaTableView.setTimeTable(mList);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
     private void addList() {
@@ -51,5 +61,15 @@ public class MainActivity extends Activity {
                 "老师6", "10", "2-13"));
         mList.add(new TimeTableModel(0, 6, 8, 5, "8:20", "10:10", "证券投资分析",
                 "老师7", "11", "2-13"));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.main_screenshot:
+                ScreenshotUtil.getBitmapByView(this, (ScrollView) findViewById(R.id.main_scrollview));
+                break;
+        }
+        return true;
     }
 }

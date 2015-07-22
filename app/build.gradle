@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.shallcheek.timetale"
-        minSdkVersion 8
-        targetSdkVersion 21
+        minSdkVersion 14
+        targetSdkVersion 22
     }
 
     buildTypes {

@@ -250,10 +250,8 @@ public class TimeTableView extends LinearLayout {
         LinearLayout mTimeTableView = new LinearLayout(getContext());
         mTimeTableView.setOrientation(VERTICAL);
         TextView mTimeTableNameView = new TextView(getContext());
-
         int num = model.getEndnum() - model.getStartnum();
-        mTimeTableNameView.setHeight(dip2px((num + 1) * TimeTableHeight) + num
-                * 2);
+        mTimeTableNameView.setHeight(dip2px((num + 1) * TimeTableHeight) + num * 2);
         mTimeTableNameView.setTextColor(getContext().getResources().getColor(
                 android.R.color.white));
         mTimeTableNameView.setWidth(dip2px(50));
@@ -262,7 +260,6 @@ public class TimeTableView extends LinearLayout {
         mTimeTableNameView.setText(model.getName() + "@" + model.getClassroom());
         mTimeTableView.addView(mTimeTableNameView);
         mTimeTableView.addView(getWeekTransverseLine());
-        //colors[getColorNum(model.getName()) 相同的课程名字获取 方块颜色;
         mTimeTableView.setBackgroundDrawable(getContext().getResources()
                 .getDrawable(colors[getColorNum(model.getName())]));
         mTimeTableView.setOnClickListener(new OnClickListener() {

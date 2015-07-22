@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <ScrollView
+        android:id="@+id/main_scrollview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="false"

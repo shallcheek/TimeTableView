@@ -69,10 +69,14 @@ public final class R {
         public static final int select_label_yi=0x7f02000d;
         public static final int select_label_yiw=0x7f02000e;
         public static final int select_label_yiwu=0x7f02000f;
-        public static final int tab_indicator_text=0x7f020010;
+        public static final int share_term_table_footer=0x7f020010;
+        public static final int share_term_table_header=0x7f020011;
+        public static final int tab_indicator_text=0x7f020012;
     }
     public static final class id {
-        public static final int main_timetable_ly=0x7f090000;
+        public static final int main_screenshot=0x7f090002;
+        public static final int main_scrollview=0x7f090000;
+        public static final int main_timetable_ly=0x7f090001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
