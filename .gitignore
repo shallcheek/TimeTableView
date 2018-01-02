@@ -1,0 +1,10 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/dbnavigator.xml
+.idea/inspectionProfiles/
+.idea/workspace.xml
+/.navigation/
+/.idea/
+/build/
+/app/build/
+/captures/

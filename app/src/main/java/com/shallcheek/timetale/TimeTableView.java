@@ -1,12 +1,14 @@
 package com.shallcheek.timetale;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,19 +39,27 @@ public class TimeTableView extends LinearLayout {
     public final static int MAXNUM = 12;
     //显示到星期几
     public final static int WEEKNUM = 7;
-    //单个View高度
-    private final static int TimeTableHeight = 50;
-    //线的高度
-    private final static int TimeTableLineHeight = 2;
-    private final static int TimeTableNumWidth = 20;
-    private final static int TimeTableWeekNameHeight = 30;
-    private LinearLayout mHorizontalWeekLayout;//第一行的星期显示
-    private LinearLayout mVerticalWeekLaout;//课程格子
-    private String[] weekname = {"一", "二", "三", "四", "五", "六", "七"};
+    /**
+     * 单个View高度
+     */
+    private final static int TIME_TABLE_HEIGHT = 50;
+    /**
+     * 线的高度
+     */
+    private final static int TIME_TABLE_LINE_HEIGHT = 2;
+    private final static int LEFT_TITLE_WIDTH = 20;
+    private final static int WEEK_TITLE_HEIGHT = 30;
+    /**
+     * 第一行的星期显示
+     */
+    private LinearLayout mHorizontalWeekLayout;
+    private LinearLayout mVerticalWeekLaout;
+    private String[] mWeekTitle = {"一", "二", "三", "四", "五", "六", "七"};
     public static String[] colorStr = new String[20];
-    int colornum = 0;
-    //数据源
+    int colorNum = 0;
     private List<TimeTableModel> mListTimeTable = new ArrayList<TimeTableModel>();
+
+    private Context mContext;
 
     public TimeTableView(Context context) {
         super(context);
@@ -57,6 +67,7 @@ public class TimeTableView extends LinearLayout {
 
     public TimeTableView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mContext = context;
     }
 
     @Override
@@ -69,12 +80,11 @@ public class TimeTableView extends LinearLayout {
      *
      * @return
      */
-    private View getWeekTransverseLine() {
-        TextView mWeekline = new TextView(getContext());
-        mWeekline.setBackgroundColor(getResources().getColor(R.color.view_line));
-        mWeekline.setHeight(TimeTableLineHeight);
-        mWeekline.setWidth(LayoutParams.FILL_PARENT);
-        return mWeekline;
+    private View getWeekHorizontalLine() {
+        View line = new View(getContext());
+        line.setBackgroundColor(getResources().getColor(R.color.view_line));
+        line.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, TIME_TABLE_LINE_HEIGHT));
+        return line;
     }
 
     /**
@@ -83,11 +93,10 @@ public class TimeTableView extends LinearLayout {
      * @return
      */
     private View getWeekVerticalLine() {
-        TextView mWeekline = new TextView(getContext());
-        mWeekline.setBackgroundColor(getResources().getColor(R.color.view_line));
-        mWeekline.setHeight(dip2px(TimeTableWeekNameHeight));
-        mWeekline.setWidth((TimeTableLineHeight));
-        return mWeekline;
+        View line = new View(mContext);
+        line.setBackgroundColor(getResources().getColor(R.color.view_line));
+        line.setLayoutParams(new ViewGroup.LayoutParams((TIME_TABLE_LINE_HEIGHT), dip2px(WEEK_TITLE_HEIGHT)));
+        return line;
     }
 
 
@@ -95,108 +104,133 @@ public class TimeTableView extends LinearLayout {
 
         mHorizontalWeekLayout = new LinearLayout(getContext());
         mHorizontalWeekLayout.setOrientation(HORIZONTAL);
-
         mVerticalWeekLaout = new LinearLayout(getContext());
         mVerticalWeekLaout.setOrientation(HORIZONTAL);
+
         //表格
         for (int i = 0; i <= WEEKNUM; i++) {
-            switch (i) {
-                case 0:
-                    //课表出的0,0格子 空白的
-                    TextView mTime = new TextView(getContext());
-                    mTime.setHeight(dip2px(TimeTableWeekNameHeight));
-                    mTime.setWidth((dip2px(TimeTableNumWidth)));
-                    mHorizontalWeekLayout.addView(mTime);
-
-                    //绘制1~MAXNUM
-                    LinearLayout mMonday = new LinearLayout(getContext());
-                    ViewGroup.LayoutParams mm = new ViewGroup.LayoutParams(dip2px(TimeTableNumWidth), dip2px(MAXNUM * TimeTableHeight) + MAXNUM * 2);
-                    mMonday.setLayoutParams(mm);
-                    mMonday.setOrientation(VERTICAL);
-                    for (int j = 1; j <= MAXNUM; j++) {
-                        TextView mNum = new TextView(getContext());
-                        mNum.setGravity(Gravity.CENTER);
-                        mNum.setTextColor(getResources().getColor(R.color.text_color));
-                        mNum.setHeight(dip2px(TimeTableHeight));
-                        mNum.setWidth(dip2px(TimeTableNumWidth));
-                        mNum.setTextSize(14);
-                        mNum.setText(j + "");
-                        mMonday.addView(mNum);
-                        mMonday.addView(getWeekTransverseLine());
-                    }
-                    mVerticalWeekLaout.addView(mMonday);
-                    break;
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                    // 设置显示星期一 到星期天
-                    LinearLayout mHoriView = new LinearLayout(getContext());
-                    mHoriView.setOrientation(VERTICAL);
-                    TextView mWeekName = new TextView(getContext());
-                    mWeekName.setTextColor(getResources().getColor(R.color.text_color));
-                    mWeekName.setWidth(((getViewWidth() - dip2px(TimeTableNumWidth))) / WEEKNUM);
-                    mWeekName.setHeight(dip2px(TimeTableWeekNameHeight));
-                    mWeekName.setGravity(Gravity.CENTER);
-                    mWeekName.setTextSize(16);
-                    mWeekName.setText(weekname[i - 1]);
-                    mHoriView.addView(mWeekName);
-                    mHorizontalWeekLayout.addView(mHoriView);
-
-                    List<TimeTableModel> mListMon = new ArrayList<>();
-                    //遍历出星期1~7的课表
-                    for (TimeTableModel timeTableModel : mListTimeTable) {
-                        if (timeTableModel.getWeek() == i) {
-                            mListMon.add(timeTableModel);
-                        }
-                    }
-                    //添加
-                    LinearLayout mLayout = getTimeTableView(mListMon, i);
-                    mLayout.setOrientation(VERTICAL);
-                    ViewGroup.LayoutParams linearParams = new ViewGroup.LayoutParams((getViewWidth() - dip2px(20)) / WEEKNUM, LayoutParams.FILL_PARENT);
-                    mLayout.setLayoutParams(linearParams);
-                    mLayout.setWeightSum(1);
-                    mVerticalWeekLaout.addView(mLayout);
-                    break;
-
-                default:
-                    break;
+            if (i == 0) {
+                layoutLeftNumber();
+            } else {
+                layoutWeekTitleView(i);
+                layoutContentView(i);
             }
-            TextView l = new TextView(getContext());
-            l.setHeight(dip2px(TimeTableHeight * MAXNUM) + MAXNUM * 2);
-            l.setWidth(2);
-            l.setBackgroundColor(getResources().getColor(R.color.view_line));
-            mVerticalWeekLaout.addView(l);
+
+            mVerticalWeekLaout.addView(createTableVerticalLine());
             mHorizontalWeekLayout.addView(getWeekVerticalLine());
         }
         addView(mHorizontalWeekLayout);
-        addView(getWeekTransverseLine());
+        addView(getWeekHorizontalLine());
         addView(mVerticalWeekLaout);
-        addView(getWeekTransverseLine());
+    }
+
+    @NonNull
+    private View createTableVerticalLine() {
+        View l = new View(getContext());
+        l.setLayoutParams(new ViewGroup.LayoutParams(TIME_TABLE_LINE_HEIGHT, dip2px(TIME_TABLE_HEIGHT * MAXNUM) + (MAXNUM - 2) * TIME_TABLE_LINE_HEIGHT));
+        l.setBackgroundColor(getResources().getColor(R.color.view_line));
+        return l;
+    }
+
+    private void layoutContentView(int week) {
+        List<TimeTableModel> weekClassList = findWeekClassList(week);
+        //添加
+        LinearLayout mLayout = createWeekTimeTableView(weekClassList, week);
+        mLayout.setOrientation(VERTICAL);
+        mLayout.setLayoutParams(new ViewGroup.LayoutParams((getViewWidth() - dip2px(20)) / WEEKNUM, LayoutParams.MATCH_PARENT));
+        mLayout.setWeightSum(1);
+        mVerticalWeekLaout.addView(mLayout);
+    }
+
+    /**
+     * 遍历出星期1~7的课表
+     * 再进行排序
+     *
+     * @param week 星期
+     */
+    @NonNull
+    private List<TimeTableModel> findWeekClassList(int week) {
+        List<TimeTableModel> list = new ArrayList<>();
+        for (TimeTableModel timeTableModel : mListTimeTable) {
+            if (timeTableModel.getWeek() == week) {
+                list.add(timeTableModel);
+            }
+        }
+
+        Collections.sort(list, new Comparator<TimeTableModel>() {
+            @Override
+            public int compare(TimeTableModel o1, TimeTableModel o2) {
+                return o1.getStartnum() - o2.getStartnum();
+            }
+        });
+
+        return list;
+    }
+
+    private void layoutWeekTitleView(int weekNumber) {
+        TextView weekText = new TextView(getContext());
+        weekText.setTextColor(getResources().getColor(R.color.text_color));
+        weekText.setWidth(((getViewWidth() - dip2px(LEFT_TITLE_WIDTH))) / WEEKNUM);
+        weekText.setHeight(dip2px(WEEK_TITLE_HEIGHT));
+        weekText.setGravity(Gravity.CENTER);
+        weekText.setTextSize(16);
+        weekText.setText(mWeekTitle[weekNumber - 1]);
+        mHorizontalWeekLayout.addView(weekText);
+    }
+
+
+    private void layoutLeftNumber() {
+        //课表出的0,0格子 空白的
+        TextView mTime = new TextView(mContext);
+        mTime.setLayoutParams(new ViewGroup.LayoutParams(dip2px(LEFT_TITLE_WIDTH), dip2px(WEEK_TITLE_HEIGHT)));
+        mHorizontalWeekLayout.addView(mTime);
+
+        //绘制1~MAXNUM
+        LinearLayout numberView = new LinearLayout(mContext);
+        numberView.setLayoutParams(new ViewGroup.LayoutParams(dip2px(LEFT_TITLE_WIDTH), dip2px(MAXNUM * TIME_TABLE_HEIGHT) + MAXNUM * 2));
+        numberView.setOrientation(VERTICAL);
+        for (int j = 1; j <= MAXNUM; j++) {
+            TextView number = createNumberView(j);
+            numberView.addView(number);
+            numberView.addView(getWeekHorizontalLine());
+        }
+        mVerticalWeekLaout.addView(numberView);
+    }
+
+    @NonNull
+    private TextView createNumberView(int j) {
+        TextView number = new TextView(getContext());
+        number.setLayoutParams(new ViewGroup.LayoutParams(dip2px(LEFT_TITLE_WIDTH), dip2px(TIME_TABLE_HEIGHT)));
+        number.setGravity(Gravity.CENTER);
+        number.setTextColor(getResources().getColor(R.color.text_color));
+        number.setTextSize(14);
+        number.setText(String.valueOf(j));
+        return number;
     }
 
     private int getViewWidth() {
-        WindowManager wm = (WindowManager) getContext().getSystemService(
-                Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         return wm.getDefaultDisplay().getWidth();
     }
 
-    private View addStartView(int startnum, final int week, final int start) {
-        LinearLayout mStartView = new LinearLayout(getContext());
-        mStartView.setOrientation(VERTICAL);
-        for (int i = 1; i < startnum; i++) {
-            TextView mTime = new TextView(getContext());
-            mTime.setGravity(Gravity.CENTER);
-            mTime.setHeight(dip2px(TimeTableHeight));
-            mTime.setWidth(dip2px(TimeTableHeight));
-            mStartView.addView(mTime);
-            mStartView.addView(getWeekTransverseLine());
+    /**
+     * 绘制空白
+     *
+     * @param count 数量
+     * @param week  星期
+     * @param start 用着计算下标
+     */
+    private View addBlankView(int count, final int week, final int start) {
+        LinearLayout blank = new LinearLayout(getContext());
+        blank.setOrientation(VERTICAL);
+        for (int i = 1; i < count; i++) {
+            View classView = new View(getContext());
+            classView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dip2px(TIME_TABLE_HEIGHT)));
+            blank.addView(classView);
+            blank.addView(getWeekHorizontalLine());
             final int num = i;
             //这里可以处理空白处点击添加课表
-            mTime.setOnClickListener(new OnClickListener() {
+            classView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getContext(), "星期" + week + "第" + (start + num) + "节", Toast.LENGTH_LONG).show();
@@ -204,39 +238,40 @@ public class TimeTableView extends LinearLayout {
             });
 
         }
-        return mStartView;
+        return blank;
     }
 
     /**
      * 星期一到星期天的课表
      *
-     * @param model
-     * @param week
-     * @return
+     * @param weekList 每天的课程列表
+     * @param week     周
      */
-    private LinearLayout getTimeTableView(List<TimeTableModel> model, int week) {
-        LinearLayout mTimeTableView = new LinearLayout(getContext());
-        mTimeTableView.setOrientation(VERTICAL);
-        int modesize = model.size();
-        if (modesize <= 0) {
-            mTimeTableView.addView(addStartView(MAXNUM + 1, week, 0));
+    private LinearLayout createWeekTimeTableView(List<TimeTableModel> weekList, int week) {
+        LinearLayout weekTableView = new LinearLayout(getContext());
+        weekTableView.setOrientation(VERTICAL);
+        int size = weekList.size();
+        if (weekList.isEmpty()) {
+            weekTableView.addView(addBlankView(MAXNUM + 1, week, 0));
         } else {
-            for (int i = 0; i < modesize; i++) {
+            for (int i = 0; i < size; i++) {
+                TimeTableModel tableModel = weekList.get(i);
                 if (i == 0) {
                     //添加的0到开始节数的空格
-                    mTimeTableView.addView(addStartView(model.get(0).getStartnum(), week, 0));
-                    mTimeTableView.addView(getMode(model.get(0)));
-                } else if (model.get(i).getStartnum() - model.get(i - 1).getStartnum() > 0) {
+                    weekTableView.addView(addBlankView(tableModel.getStartnum(), week, 0));
+                    weekTableView.addView(createClassView(tableModel));
+                } else if (weekList.get(i).getStartnum() - weekList.get(i - 1).getEndnum() > 0) {
                     //填充
-                    mTimeTableView.addView(addStartView(model.get(i).getStartnum() - model.get(i - 1).getEndnum(), week, model.get(i - 1).getEndnum()));
-                    mTimeTableView.addView(getMode(model.get(i)));
+                    weekTableView.addView(addBlankView(weekList.get(i).getStartnum() - weekList.get(i - 1).getEndnum(), week, weekList.get(i - 1).getEndnum()));
+                    weekTableView.addView(createClassView(weekList.get(i)));
                 }
-                if (i + 1 == modesize) {
-                    mTimeTableView.addView(addStartView(MAXNUM - model.get(i).getEndnum(), week, model.get(i).getEndnum()));
+                //绘制剩下的空白
+                if (i + 1 == size) {
+                    weekTableView.addView(addBlankView(MAXNUM - weekList.get(i).getEndnum() + 1, week, weekList.get(i).getEndnum()));
                 }
             }
         }
-        return mTimeTableView;
+        return weekTableView;
     }
 
     /**
@@ -246,20 +281,24 @@ public class TimeTableView extends LinearLayout {
      * @return
      */
     @SuppressWarnings("deprecation")
-    private View getMode(final TimeTableModel model) {
+    private View createClassView(final TimeTableModel model) {
         LinearLayout mTimeTableView = new LinearLayout(getContext());
         mTimeTableView.setOrientation(VERTICAL);
+        int num = (model.getEndnum() - model.getStartnum());
+        mTimeTableView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dip2px((num + 1) * TIME_TABLE_HEIGHT) + (num + 1) * TIME_TABLE_LINE_HEIGHT));
+
         TextView mTimeTableNameView = new TextView(getContext());
-        int num = model.getEndnum() - model.getStartnum();
-        mTimeTableNameView.setHeight(dip2px((num + 1) * TimeTableHeight) + num * 2);
+        mTimeTableNameView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dip2px((num + 1) * TIME_TABLE_HEIGHT) + (num) * TIME_TABLE_LINE_HEIGHT));
+
         mTimeTableNameView.setTextColor(getContext().getResources().getColor(
                 android.R.color.white));
-        mTimeTableNameView.setWidth(dip2px(50));
         mTimeTableNameView.setTextSize(16);
         mTimeTableNameView.setGravity(Gravity.CENTER);
         mTimeTableNameView.setText(model.getName() + "@" + model.getClassroom());
+
         mTimeTableView.addView(mTimeTableNameView);
-        mTimeTableView.addView(getWeekTransverseLine());
+        mTimeTableView.addView(getWeekHorizontalLine());
+
         mTimeTableView.setBackgroundDrawable(getContext().getResources()
                 .getDrawable(colors[getColorNum(model.getName())]));
         mTimeTableView.setOnClickListener(new OnClickListener() {
@@ -279,7 +318,7 @@ public class TimeTableView extends LinearLayout {
      */
     public int dip2px(float dpValue) {
         float scale = getContext().getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
+        return (int) (dpValue * scale);
     }
 
     public void setTimeTable(List<TimeTableModel> mlist) {
@@ -307,8 +346,8 @@ public class TimeTableView extends LinearLayout {
             }
         }
         if (!isRepeat) {
-            colorStr[colornum] = name;
-            colornum++;
+            colorStr[colorNum] = name;
+            colorNum++;
         }
     }
 
